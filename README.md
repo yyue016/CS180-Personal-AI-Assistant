@@ -1,1 +1,1 @@
-# CS180
+# CS180 -- Personal AI Assistant
