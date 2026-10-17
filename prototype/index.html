@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal AI Assistant · Desktop Widget Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Literata:opsz,wght@7..72,600;7..72,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Fake desktop surface -->
+  <div class="desktop" aria-hidden="true">
+    <div class="desk-wallpaper"></div>
+
+    <div class="desk-icons">
+      <div class="desk-icon">
+        <span class="ico ico-files"></span>
+        <span>Files</span>
+      </div>
+      <div class="desk-icon">
+        <span class="ico ico-notes"></span>
+        <span>Notes</span>
+      </div>
+      <div class="desk-icon">
+        <span class="ico ico-browser"></span>
+        <span>Browser</span>
+      </div>
+      <div class="desk-icon">
+        <span class="ico ico-mail"></span>
+        <span>Mail</span>
+      </div>
+      <div class="desk-icon">
+        <span class="ico ico-code"></span>
+        <span>Code</span>
+      </div>
+      <div class="desk-icon">
+        <span class="ico ico-music"></span>
+        <span>Music</span>
+      </div>
+      <div class="desk-icon">
+        <span class="ico ico-photos"></span>
+        <span>Photos</span>
+      </div>
+      <div class="desk-icon">
+        <span class="ico ico-terminal"></span>
+        <span>Terminal</span>
+      </div>
+      <div class="desk-icon">
+        <span class="ico ico-trash"></span>
+        <span>Trash</span>
+      </div>
+    </div>
+
+    <aside class="desk-window notes-win">
+      <div class="win-title">User Guide.md</div>
+      <div class="win-body">
+        <p><strong>personal assistants</strong></p>
+        <p>Retrieval-augmented generation grounds answers in approved local files.</p>
+        <p>Profile preferences control tone, length, and language without re-prompting.</p>
+        <p>A floating desktop widget keeps chat available while you work.</p>
+      </div>
+    </aside>
+    <aside class="desk-window browser-win">
+      <div class="win-title">
+        <span class="browser-tabs">
+          <span class="btab active">Docs — RAG overview</span>
+          <span class="btab">Campus News</span>
+          <span class="btab">Stack Overflow</span>
+        </span>
+      </div>
+      <div class="browser-stage">
+        <div class="browser-page" aria-hidden="true">
+          <div class="page-url">https://docs.example.edu/cs180/rag-assistants</div>
+          <div class="page-hero">CS180 · Building Personal AI Assistants</div>
+          <div class="page-grid">
+            <article>
+              <h4>What is RAG?</h4>
+              <p>Retrieval-augmented generation looks up passages from your approved files before answering, so replies stay grounded.</p>
+              <p>Index notes once, then ask follow-up questions while you keep browsing.</p>
+            </article>
+            <article>
+              <h4>Campus update</h4>
+              <p>Library hours extend through finals week. Study rooms bookable online.</p>
+              <p>Workshop: local LLMs on Friday 3pm, Room 204.</p>
+            </article>
+            <article>
+              <h4>Related threads</h4>
+              <p>How do I cite retrieved sources in chat UI?</p>
+              <p>Best practices for editable user profiles with tone controls.</p>
+            </article>
+          </div>
+          <div class="page-side">
+            <div class="chip">Documentation</div>
+            <div class="chip">Local models</div>
+            <div class="chip">Privacy</div>
+            <div class="fake-list"></div>
+            <div class="fake-list short"></div>
+            <div class="fake-list"></div>
+          </div>
+        </div>
+        <div class="browser-caption">
+          Working on other tasks… the assistant stays as a floating plugin.
+        </div>
+      </div>
+    </aside>
+    <div class="desk-taskbar">
+      <div class="task-apps">
+        <span class="task-app ico-files" title="Files"></span>
+        <span class="task-app ico-browser" title="Browser"></span>
+        <span class="task-app ico-notes" title="Notes"></span>
+        <span class="task-app ico-code" title="Code"></span>
+        <span class="task-app paa" title="Personal AI Assistant"></span>
+      </div>
+      <span>Desktop · Personal AI Assistant demo</span>
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <!-- Demo controls -->
+  <div class="demo-bar">
+    <strong>Live demo</strong>
+    <button type="button" id="playDemo" class="demo-btn">Play walkthrough</button>
+    <button type="button" id="resetDemo" class="demo-btn ghost">Reset</button>
+    <span id="demoCaption">Float widget = everyday use. Settings only when needed.</span>
+  </div>
+
+  <!-- First-time profile setup overlay -->
+  <section id="view-setup" class="overlay" hidden>
+    <form id="setupForm" class="setup-card">
+      <h1>Personal AI Assistant</h1>
+      <p class="hint">One-time profile setup before the floating widget appears.</p>
+      <label>Display name<input id="setupName" type="text" required placeholder="e.g. Alex" /></label>
+      <label>Language
+        <select id="setupLanguage"><option>English</option></select>
+      </label>
+      <label>Tone
+        <select id="setupTone">
+          <option>Friendly</option>
+          <option>Formal</option>
+          <option>Concise</option>
+        </select>
+      </label>
+      <label>Answer length
+        <select id="setupLength">
+          <option>Short</option>
+          <option selected>Medium</option>
+          <option>Detailed</option>
+        </select>
+      </label>
+      <label>Example preferences
+        <textarea id="setupExamples" rows="2" placeholder="Prefer bullet points; keep answers practical"></textarea>
+      </label>
+      <p class="error" id="setupError" hidden></p>
+      <button type="submit">Save profile &amp; open widget</button>
+    </form>
+  </section>
+
+  <!-- Collapsed launcher bubble -->
+  <button type="button" id="launcher" class="launcher" hidden title="Open Personal AI Assistant" aria-label="Open assistant">
+    <span class="launcher-dot"></span>
+    PAA
+  </button>
+
+  <!-- Floating widget (primary everyday UI) -->
+  <div id="widget" class="widget" hidden>
+    <header class="widget-chrome" id="widgetDrag">
+      <div class="chrome-left">
+        <span class="traffic"></span>
+        <div>
+          <strong>Personal AI Assistant</strong>
+          <small id="activeModelLabel">Model: none</small>
+        </div>
+      </div>
+      <div class="chrome-actions">
+        <button type="button" id="btnSettings" class="icon-btn" title="Settings">⚙</button>
+        <button type="button" id="btnMinimize" class="icon-btn" title="Minimize to bubble">—</button>
+      </div>
+    </header>
+
+    <div class="widget-body">
+      <!-- Everyday float: chat only -->
+      <div id="pane-chat" class="pane">
+        <div id="chat" class="chat"></div>
+        <p class="status-line" id="chatStatus"></p>
+        <form id="chatForm" class="chat-form">
+          <input id="userInput" type="text" placeholder="Ask while you work…" autocomplete="off" required />
+          <button type="submit">Send</button>
+        </form>
+      </div>
+
+      <!-- Occasional settings drawer -->
+      <div id="pane-settings" class="pane settings-pane" hidden>
+        <div class="settings-tabs">
+          <button type="button" class="stab active" data-tab="docs">Documents</button>
+          <button type="button" class="stab" data-tab="model">Model</button>
+          <button type="button" class="stab" data-tab="profile">Profile</button>
+          <button type="button" class="stab" data-tab="summaries">Summaries</button>
+          <button type="button" id="closeSettings" class="stab back">← Chat</button>
+        </div>
+
+        <div id="tab-docs" class="stab-panel">
+          <p class="hint">Upload approved notes once; everyday use stays in the float chat.</p>
+          <div class="file-picker">
+            <input type="file" id="docInput" accept=".txt,.md,.text" multiple hidden />
+            <button type="button" id="docBrowse" class="secondary">Choose files</button>
+            <span class="hint" id="docChosen">No file chosen</span>
+          </div>
+          <p class="error" id="docError" hidden></p>
+          <p class="ok" id="docOk" hidden></p>
+          <ul id="docList"></ul>
+          <button type="button" id="clearDocs" class="secondary">Clear documents</button>
+        </div>
+
+        <div id="tab-model" class="stab-panel" hidden>
+          <p class="hint">Download / activate a local model, then return to the float.</p>
+          <ul id="modelList" class="model-list"></ul>
+          <p class="error" id="modelError" hidden></p>
+          <p class="ok" id="modelOk" hidden></p>
+          <p class="hint" id="modelStatus">Select a model.</p>
+        </div>
+
+        <div id="tab-profile" class="stab-panel" hidden>
+          <form id="profileForm">
+            <label>Display name<input id="profileName" type="text" required /></label>
+            <label>Language<select id="profileLanguage"><option>English</option></select></label>
+            <label>Tone
+              <select id="profileTone">
+                <option>Friendly</option>
+                <option>Formal</option>
+                <option>Concise</option>
+              </select>
+            </label>
+            <label>Answer length
+              <select id="profileLength">
+                <option>Short</option>
+                <option>Medium</option>
+                <option>Detailed</option>
+              </select>
+            </label>
+            <label>Example preferences<textarea id="profileExamples" rows="2"></textarea></label>
+            <p class="error" id="profileError" hidden></p>
+            <p class="ok" id="profileOk" hidden></p>
+            <button type="submit">Save profile</button>
+          </form>
+        </div>
+
+        <div id="tab-summaries" class="stab-panel" hidden>
+          <p class="hint">Optional scheduled summaries (runs in the background).</p>
+          <label>Notes folder path<input id="notesFolder" type="text" placeholder="C:\****" /></label>
+          <label>Frequency
+            <select id="summaryFreq">
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+            </select>
+          </label>
+          <div class="row">
+            <button type="button" id="enableSchedule">Enable</button>
+            <button type="button" id="runOnce" class="secondary">Run once</button>
+            <button type="button" id="disableSchedule" class="secondary">Disable</button>
+          </div>
+          <p class="error" id="sumError" hidden></p>
+          <p class="ok" id="sumOk" hidden></p>
+          <p class="hint" id="sumStatus">Schedule disabled.</p>
+          <pre id="sumOutput" class="sum-output">No summary yet.</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
