@@ -2,6 +2,8 @@
 #include<cstdlib>
 #include<string>
 #include <cctype>
+#include <filesystem>
+
 using namespace std;
 bool commandrunning(const string&cmd,bool showError = true){
     int ret = system(cmd.c_str());
@@ -46,9 +48,22 @@ int main(){
 
     }
 
+    
+    cout << "Checking Ollama after installation..." << endl;
+    int checkpath = system("Where.exe ollama");
+
+    if (checkpath == 0) {
+        cout << "Ollama found!" << endl;
+    }
+    else {
+        cout << "Ollama installed, but not found in PATH." << endl;
+    }
+
+
+
     cout << " Checking Ollama service... " <<endl;
-    if(!commandrunning("curl.exe -fsS --max-time 3 -o NUL "
-        "http://127.0.0.1:11434/api/tags 2>nul")){
+    if(!commandrunning("curl.exe -fsS --max-time 3 -o NUL " "http://127.0.0.1:11434/api/tags 2>nul")){
+
         cout << "Starting Ollama..." << endl;
         if (!commandrunning("start \"\" ollama serve")) {
             cerr << "Cannot start Ollama!" << endl;
