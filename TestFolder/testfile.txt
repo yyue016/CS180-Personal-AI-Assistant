@@ -1,0 +1,5 @@
+What is RAM?
+What is a CPU?
+What is an operating system?
+What is machine learning?
+What is a GPU?
