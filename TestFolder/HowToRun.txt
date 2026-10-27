@@ -1,0 +1,9 @@
+The test is consist of 3 files : GPUMonitor.cpp, CPUMonitor.cpp, and testSimple.cpp.
+Type this to run : g++ -std=c++17 testSimple.cpp CPUMonitor.cpp GPUMonitor.cpp -o s.exe -lpsapi -pthread
+This test assumes that you have download all test models. So if you don't have it, it returns.
+This test support file entry, which you throw all questions inside a file, seperate by line as testfile.txt shown
+Or choosing typing entry. The typing entry only run once.
+Tester has to type in the model name, testing methods.
+Now the code is fixed to run each prompt for 3 times. If you want to change it please locate to const int repeats in main function
+This testSimple.cpp will generate a txt file just ignore it, which means delete manually. :(
+It takes a long time. :)
