@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>personal AI</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 
 <body class="d-flex vh-100 flex-column">
@@ -18,21 +19,24 @@
         </div>
     </div>
     <div class="container-fluid overflow-auto flex-grow-1" style="background: var(--bs-white);">
-        <form class="mb-3"><label class="form-label">Display Name</label><input class="form-control" type="text" placeholder="Enter your name"><label class="form-label">Language</label><select class="form-select">
-                <option value="">Auto</option>
+        <form class="mb-3" id="settingsForm"><label class="form-label">AI Model</label><select class="form-select" id="aiModel">
+                <option value="">None</option>
+            </select><label class="form-label">Display Name</label><input class="form-control" type="text" id="displayName" placeholder="Enter your name"><label class="form-label">Language</label><select class="form-select" id="language">
                 <option value="">English</option>
-            </select><label class="form-label">Response Tone</label><select class="form-select">
-                <option value="">Friendly</option>
-                <option value="">Professional</option>
-                <option value="">Casual</option>
-            </select><label class="form-label">Answer Length</label><select class="form-select">
-                <option value="">Short</option>
-                <option value="">Medium</option>
-                <option value="Detailed">Casual</option>
-            </select><label class="form-label">Example Preferences</label><textarea class="form-control" placeholder="Describe your preferences..."></textarea></form><button class="btn btn-primary w-100" type="button">Save Settings</button>
+            </select><label class="form-label">Response Tone</label><select class="form-select" id="responseTone">
+                <option value="friendly">Friendly</option>
+                <option value="professional">Professional</option>
+                <option value="casual">Casual</option>
+            </select><label class="form-label">Answer Length</label><select class="form-select" id="answerLength">
+                <option value="short">Short</option>
+                <option value="medium">Medium</option>
+                <option value="casual">Casual</option>
+            </select><label class="form-label">Example Preferences</label><textarea class="form-control" id="examplePreferences" placeholder="Describe your preferences..."></textarea></form><button class="btn btn-primary w-100" id="saveSettings" type="button">Save Settings</button>
     </div>
     <div class="input-group flex-shrink-0"></div>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/chat.js"></script>
+    <script src="assets/js/settings.js"></script>
 </body>
 
 </html>
